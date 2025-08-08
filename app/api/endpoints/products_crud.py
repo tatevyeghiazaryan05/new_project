@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-from services.qr_stats import QRStatsService
+from services.statistics import StatsService
 
 products_router = APIRouter()
-stats_service = QRStatsService()
+stats_service = StatsService()
 
 
 @products_router.get("/api/scan-count")

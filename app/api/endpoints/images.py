@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import FileResponse
-from services.qr_stats import QRStatsService
+from services.statistics import StatsService
 
 image_router = APIRouter()
-stats_service = QRStatsService()
+stats_service = StatsService()
 
 
 @image_router.get("/api/success/image")
