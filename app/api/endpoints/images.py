@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import FileResponse
-from services.statistics import StatsService
+from app.services.statistics import StatsService
 
 image_router = APIRouter()
-stats_service = StatsService()
 
 
 @image_router.get("/api/success/image")
@@ -21,6 +20,7 @@ def success(request: Request):
         app_name = "Facebook"
 
     # Save scan in DB
-    stats_service.save_scan(app_name, user_agent)
+    # Replaced with an insert-only call since save_scan is not defined
+    StatsService().scan_data_to_db()
 
     return FileResponse("./images/successfully_pic.jpg")

@@ -1,6 +1,4 @@
-// todo Statistic functions have to be small functions
-// todo deploy
-// todo statistic between 1 week, 1 month, 3 moth, 6 moth and 1 year
-// todo active hours
-// todo average of users per day
 // todo todo's project bolt
+// todo add try,except
+//todo in get_scan_counts_by_hour add start_date end_date
+// todo average of users  per month, per 3 month, per 6 month .....
