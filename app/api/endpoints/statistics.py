@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends
+from datetime import date
+
+from fastapi import APIRouter
 from services.statistics import StatsService
 
 statistics_router = APIRouter()
 statistics_service = StatsService()
 
 
-@statistics_router.post("/api/scan")
-def save_scan():
-    return statistics_service.save_scan()
+@statistics_router.get("/api/scan")
+def scan_data_to_db():
+    return statistics_service.scan_data_to_db()
 
 
 @statistics_router.get("/total/scans")
@@ -28,3 +30,8 @@ def peak_scan_hours():
 @statistics_router.get("/stats/average-per-day")
 def average_scans_per_day():
     return statistics_service.get_average_scans_per_day()
+
+
+@statistics_router.get("/stats/period/{start_date}/{end_date}")
+def stats_period(start_date: date, end_date: date):
+    return statistics_service.get_stats_for_period(start_date, end_date)

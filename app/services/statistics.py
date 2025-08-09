@@ -1,5 +1,5 @@
 import datetime
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 from db_connection import DbConnection
 
@@ -8,7 +8,7 @@ class StatsService:
     def __init__(self):
         self.db = DbConnection()
 
-    def save_scan(self):
+    def scan_data_to_db(self):
         self.db.cursor.execute("""INSERT INTO scan_events (created_at) VALUES (NOW())""")
         self.db.conn.commit()
 
@@ -47,38 +47,13 @@ class StatsService:
         result = self.db.cursor.fetchone()
         return {"average_scans_per_day": float(result['average_per_day']) if result['average_per_day'] else 0.0}
 
-    def get_last_week_stats(self):
-        seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+    def get_stats_for_period(self, start_date: date, end_date: date):
+        end_date = end_date + timedelta(days=1)
+        if start_date is None or end_date is None:
+            raise ValueError("Invalid input")
+
         self.db.cursor.execute("""SELECT TO_CHAR(created_at, 'YYYY-MM-DD') AS date,
-                                COUNT(*) FROM scan_events WHERE created_at >= %s 
-                                GROUP BY date ORDER BY date""", (seven_days_ago,))
+                                COUNT(*) AS total FROM scan_events
+                                WHERE created_at >= %s AND created_at <= %s
+                                GROUP BY date ORDER BY date""", (start_date, end_date))
         return self.db.cursor.fetchall()
-
-    def get_last_month_stats(self):
-        one_month_ago = datetime.datetime.now() - datetime.timedelta(days=30)
-        self.db.cursor.execute("""SELECT TO_CHAR(created_at, 'YYYY-MM-DD') AS date,
-                                COUNT(*) FROM scan_events WHERE created_at >= %s
-                                 GROUP BY date ORDER BY date""", (one_month_ago,))
-        return self.db.cursor.fetchall()
-
-    def get_last_three_months_stats(self):
-        three_months_ago = datetime.datetime.now() - datetime.timedelta(days=90)
-        self.db.cursor.execute("""SELECT TO_CHAR(created_at, 'YYYY-MM-DD') AS date, 
-                                COUNT(*) FROM scan_events WHERE created_at >= %s
-                                GROUP BY date ORDER BY date""", (three_months_ago,))
-        return self.db.cursor.fetchall()
-
-    def get_last_six_months_stats(self):
-        six_months_ago = datetime.datetime.now() - datetime.timedelta(days=180)
-        self.db.cursor.execute("""SELECT TO_CHAR(created_at, 'YYYY-MM-DD') AS date, 
-                                COUNT(*) FROM scan_events WHERE created_at >= %s
-                                GROUP BY date ORDER BY date""", (six_months_ago,))
-        return self.db.cursor.fetchall()
-
-    def get_last_year_stats(self):
-        one_year_ago = datetime.datetime.now() - datetime.timedelta(days=365)
-        self.db.cursor.execute("""SELECT TO_CHAR(created_at, 'YYYY-MM-DD') AS date,COUNT(*) 
-                                FROM scan_events WHERE created_at >= %s
-                                GROUP BY date ORDER BY date""", (one_year_ago,))
-        return self.db.cursor.fetchall()
-
