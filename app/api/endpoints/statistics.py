@@ -21,14 +21,14 @@ def total_scans_by_date():
     return StatsService().get_total_scans_by_date()
 
 
-@statistics_router.get("/stats/peak-hours")
-def peak_scan_hours():
-    return StatsService().get_scan_counts_by_hour()
+@statistics_router.get("/stats/peak-hours/{start_date}/{end_date}")
+def peak_scan_hours(start_date: date, end_date: date):
+    return StatsService().get_scan_counts_by_hour(start_date, end_date)
 
 
-@statistics_router.get("/stats/average-per-day")
-def average_scans_per_day():
-    return StatsService().get_average_scans_per_day()
+@statistics_router.get("/stats/average-per-day/{start_date}/{end_date}")
+def average_scans_per_day(start_date: date, end_date: date):
+    return StatsService().get_average_scans_per_day(start_date, end_date)
 
 
 @statistics_router.get("/stats/period/{start_date}/{end_date}")

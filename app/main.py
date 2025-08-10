@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from api.endpoints import products_crud
 from api.endpoints import statistics
-app = FastAPI()
+app = FastAPI(root_path="/newproject")
 
 
 
